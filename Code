@@ -1,0 +1,46 @@
+```
+install.packages("tidyverse")
+
+# Load necessary libraries
+library(tidyverse)
+
+
+# Calculate the survival rate
+survival_rate <- mean(gender_submission$Survived)
+print(paste("Survival Rate:", round(survival_rate * 100, 2), "%"))
+
+# Plot the distribution of survivors and non-survivors
+ggplot(gender_submission, aes(x = factor(Survived))) +
+  geom_bar(fill = c("red", "green")) +
+  xlab("Survived") +
+  ylab("Count") +
+  ggtitle("Survivor Distribution") +
+  scale_x_discrete(labels = c("0" = "Did Not Survive", "1" = "Survived"))
+
+
+# Assuming 'data' has a 'Pclass' column for passenger class
+class_distribution <- test_set %>%
+  group_by(Pclass) %>%
+  summarise(Count = n())
+
+# Plot class distribution
+ggplot(class_distribution, aes(x = Pclass, y = Count, fill = Pclass)) +
+  geom_bar(stat = "identity") +
+  xlab("Passenger Class") +
+  ylab("Count") +
+  ggtitle("Passenger Class Distribution")
+
+# Assuming 'data' has a 'Sex' column for gender
+gender_survival <- training_set %>%
+  group_by(Sex, Survived) %>%
+  summarise(Count = n()) %>%
+  mutate(Percentage = Count / sum(Count) * 100)
+
+# Plot survival by gender
+ggplot(gender_survival, aes(x = Sex, y = Percentage, fill = factor(Survived))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  xlab("Gender") +
+  ylab("Percentage") +
+  ggtitle("Survival Rate by Gender") +
+  scale_fill_discrete(name = "Survived", labels = c("No", "Yes"))
+```
